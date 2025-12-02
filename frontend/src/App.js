@@ -5,7 +5,9 @@ import { Toaster } from '@/components/ui/toaster';
 import '@/App.css';
 
 // Pages
-import Home from './pages/Home';
+import Landing from './pages/Landing';
+import Register from './pages/Register';
+import Application from './pages/Application';
 import Success from './pages/Success';
 import Login from './pages/Login';
 import ClientDashboard from './pages/ClientDashboard';
