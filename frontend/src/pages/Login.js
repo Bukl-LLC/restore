@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
+import { t } from '../translations';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +15,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { toast } = useToast();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -31,11 +35,10 @@ const Login = () => {
       const role = await login(formData.email, formData.password);
       
       toast({
-        title: 'Success',
+        title: t(language, 'common.success'),
         description: 'Logged in successfully',
       });
 
-      // Redirect based on role
       if (role === 'admin') {
         navigate('/admin/dashboard');
       } else {
@@ -54,21 +57,25 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher />
+      </div>
+      
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Login to access your account</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t(language, 'login.title')}</h1>
+          <p className="text-gray-600">{t(language, 'login.subtitle')}</p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Login</CardTitle>
-            <CardDescription>Enter your credentials to continue</CardDescription>
+            <CardTitle>{t(language, 'login.formTitle')}</CardTitle>
+            <CardDescription>{t(language, 'login.formSubtitle')}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t(language, 'login.email')}</Label>
                 <Input
                   id="email"
                   name="email"
@@ -81,7 +88,7 @@ const Login = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t(language, 'login.password')}</Label>
                 <Input
                   id="password"
                   name="password"
@@ -97,10 +104,10 @@ const Login = () => {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Logging in...
+                    {t(language, 'login.submitting')}
                   </>
                 ) : (
-                  'Login'
+                  t(language, 'login.submit')
                 )}
               </Button>
             </form>
@@ -109,8 +116,8 @@ const Login = () => {
 
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <a href="/" className="text-blue-600 hover:underline">Submit application</a>
+            {t(language, 'login.noAccount')}{' '}
+            <a href="/" className="text-blue-600 hover:underline">{t(language, 'login.submitApp')}</a>
           </p>
         </div>
       </div>

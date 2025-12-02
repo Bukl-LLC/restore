@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
+import { t } from '../translations';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, ArrowLeft } from 'lucide-react';
-import axios from 'axios';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
 
 const Register = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { language } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -34,8 +34,8 @@ const Register = () => {
     
     if (formData.password !== formData.confirmPassword) {
       toast({
-        title: 'Ошибка',
-        description: 'Пароли не совпадают',
+        title: t(language, 'common.error'),
+        description: t(language, 'register.errors.passwordMismatch'),
         variant: 'destructive',
       });
       return;
@@ -43,8 +43,8 @@ const Register = () => {
 
     if (formData.password.length < 8) {
       toast({
-        title: 'Ошибка',
-        description: 'Пароль должен содержать минимум 8 символов',
+        title: t(language, 'common.error'),
+        description: t(language, 'register.errors.passwordShort'),
         variant: 'destructive',
       });
       return;
@@ -52,7 +52,6 @@ const Register = () => {
 
     setLoading(true);
     try {
-      // Store registration data in session storage
       sessionStorage.setItem('registrationData', JSON.stringify({
         email: formData.email,
         password: formData.password,
@@ -62,16 +61,15 @@ const Register = () => {
       }));
 
       toast({
-        title: 'Успешно!',
-        description: 'Регистрация прошла успешно. Заполните форму заявки.',
+        title: t(language, 'common.success'),
+        description: t(language, 'register.success'),
       });
 
-      // Redirect to application form
       navigate('/application');
     } catch (error) {
       toast({
-        title: 'Ошибка',
-        description: error.response?.data?.detail || 'Не удалось зарегистрироваться',
+        title: t(language, 'common.error'),
+        description: error.response?.data?.detail || 'Registration failed',
         variant: 'destructive',
       });
     } finally {
@@ -81,6 +79,10 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher />
+      </div>
+      
       <div className="max-w-md mx-auto">
         <Button
           variant="ghost"
@@ -88,24 +90,24 @@ const Register = () => {
           className="mb-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          На главную
+          {t(language, 'register.backHome')}
         </Button>
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Регистрация</h1>
-          <p className="text-gray-600">Создайте аккаунт для подачи заявки</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t(language, 'register.title')}</h1>
+          <p className="text-gray-600">{t(language, 'register.subtitle')}</p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Создать аккаунт</CardTitle>
-            <CardDescription>Введите ваши данные для регистрации</CardDescription>
+            <CardTitle>{t(language, 'register.form.title')}</CardTitle>
+            <CardDescription>{t(language, 'register.form.subtitle')}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="first_name">Имя *</Label>
+                  <Label htmlFor="first_name">{t(language, 'register.form.firstName')} *</Label>
                   <Input
                     id="first_name"
                     name="first_name"
@@ -115,7 +117,7 @@ const Register = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="last_name">Фамилия *</Label>
+                  <Label htmlFor="last_name">{t(language, 'register.form.lastName')} *</Label>
                   <Input
                     id="last_name"
                     name="last_name"
@@ -127,7 +129,7 @@ const Register = () => {
               </div>
 
               <div>
-                <Label htmlFor="email">Email *</Label>
+                <Label htmlFor="email">{t(language, 'register.form.email')} *</Label>
                 <Input
                   id="email"
                   name="email"
@@ -140,7 +142,7 @@ const Register = () => {
               </div>
 
               <div>
-                <Label htmlFor="phone">Телефон *</Label>
+                <Label htmlFor="phone">{t(language, 'register.form.phone')} *</Label>
                 <Input
                   id="phone"
                   name="phone"
@@ -153,27 +155,27 @@ const Register = () => {
               </div>
 
               <div>
-                <Label htmlFor="password">Пароль *</Label>
+                <Label htmlFor="password">{t(language, 'register.form.password')} *</Label>
                 <Input
                   id="password"
                   name="password"
                   type="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Минимум 8 символов"
+                  placeholder={t(language, 'register.form.passwordPlaceholder')}
                   required
                 />
               </div>
 
               <div>
-                <Label htmlFor="confirmPassword">Подтвердите пароль *</Label>
+                <Label htmlFor="confirmPassword">{t(language, 'register.form.confirmPassword')} *</Label>
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="Повторите пароль"
+                  placeholder={t(language, 'register.form.confirmPasswordPlaceholder')}
                   required
                 />
               </div>
@@ -182,10 +184,10 @@ const Register = () => {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Регистрация...
+                    {t(language, 'register.form.submitting')}
                   </>
                 ) : (
-                  'Зарегистрироваться'
+                  t(language, 'register.form.submit')
                 )}
               </Button>
             </form>
@@ -194,8 +196,8 @@ const Register = () => {
 
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
-            Уже есть аккаунт?{' '}
-            <a href="/login" className="text-blue-600 hover:underline">Войти</a>
+            {t(language, 'register.alreadyHave')}{' '}
+            <a href="/login" className="text-blue-600 hover:underline">{t(language, 'register.loginLink')}</a>
           </p>
         </div>
       </div>
