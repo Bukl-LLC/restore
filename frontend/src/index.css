@@ -115,9 +115,11 @@ code {
 }
 
 /* Hide Emergent branding banner */
+#emergent-badge,
 div[style*="position: fixed"][style*="bottom"][style*="right"],
 div[style*="position:fixed"][style*="bottom"][style*="right"],
 a[href*="emergentagent.com"],
+a[href*="emergent.sh"],
 a[target="_blank"][style*="position"],
 [style*="z-index: 999999"],
 [style*="z-index:999999"] {
