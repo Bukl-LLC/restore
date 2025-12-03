@@ -117,9 +117,18 @@ code {
 /* Hide Emergent branding banner */
 div[style*="position: fixed"][style*="bottom"][style*="right"],
 div[style*="position:fixed"][style*="bottom"][style*="right"],
-a[href*="emergentagent.com"][style*="position: fixed"],
-a[href*="emergentagent.com"][style*="position:fixed"] {
+a[href*="emergentagent.com"],
+a[target="_blank"][style*="position"],
+[style*="z-index: 999999"],
+[style*="z-index:999999"] {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Additional targeting for common banner patterns */
+body > div:last-child[style*="position: fixed"],
+body > a:last-child[style*="position: fixed"] {
+    display: none !important;
 }
